@@ -335,13 +335,45 @@ async function markAsLearned() {
             flashcard.classList.toggle('flipped');
         });
 
-        nextBtn.addEventListener('click', () => {
+        function animateFlashcardTransition(callback) {
+        flashcard.classList.add('fade-out');
+
+        setTimeout(() => {
+            callback(); // cập nhật nội dung thẻ
+            flashcard.classList.remove('fade-out');
+            flashcard.classList.add('fade-in');
+
+            setTimeout(() => {
+            flashcard.classList.remove('fade-in');
+            }, 200);
+        }, 200);
+        }
+
+
+            nextBtn.addEventListener('click', () => {
             if (currentVocab.length === 0) return;
-            
-            history.push(currentIndex);
-            currentIndex = getRandomWord();
-            updateDisplay();
-        });
+
+            const unlearned = currentVocab.filter(word =>
+                !learnedWords.some(learned => learned._id === word._id)
+            );
+
+            if (unlearned.length === 0) {
+                alert('🎉 Bạn đã học hết các từ trong bộ lọc hiện tại!');
+                return;
+            }
+
+            const randomIndex = Math.floor(Math.random() * unlearned.length);
+            const nextWord = unlearned[randomIndex];
+
+            const vocabIndex = currentVocab.findIndex(w => w._id === nextWord._id);
+            if (vocabIndex !== -1) {
+                history.push(currentIndex);
+                currentIndex = vocabIndex;
+                animateFlashcardTransition(updateDisplay);
+            }
+            });
+
+
 
         prevBtn.addEventListener('click', () => {
             if (history.length === 0) return;

@@ -15,6 +15,24 @@
         }
     </script>
     <style>
+
+        @keyframes fadeOut {
+        from { opacity: 1; transform: scale(1); }
+        to { opacity: 0; transform: scale(0.96); }
+        }
+
+        @keyframes fadeIn {
+        from { opacity: 0; transform: scale(1.02); }
+        to { opacity: 1; transform: scale(1); }
+        }
+
+        .flashcard.fade-out {
+        animation: fadeOut 0.2s ease forwards;
+        }
+
+        .flashcard.fade-in {
+        animation: fadeIn 0.2s ease forwards;
+        }
         .flashcard {
             perspective: 1000px;
             width: 100%;
@@ -76,45 +94,68 @@
     </style>
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 min-h-screen theme-transition">
-    <!-- Header -->
-    <header class="gradient-bg text-white py-6 shadow-lg">
-        <div class="container mx-auto px-4">
-            <div class="flex justify-between items-center">
-                <div class="text-center flex-1">
-                    <h1 class="text-3xl font-bold " style="font-family: 'Ma Shan Zheng';"> <span class="text-3xl font-bold " style="font-family: 'Edu QLD Hand';" >Học từ vựng tiếng Trung</span>中</h1>
-                    <h2 class="text-xl mt-2 chinese-font opacity-90" style="font-family: 'Ma Shan Zheng';" >学习中文词汇</h2>
-                </div>
-                <button id="darkModeToggle" class="bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-lg transition-all duration-300">
-                    <span id="darkModeIcon">🌙</span>
+   <!-- Header -->
+<header class="gradient-bg text-white py-6 shadow-lg">
+    <div class="container mx-auto px-4">
+        <div class="flex justify-between items-center">
+            <!-- Tiêu đề -->
+            <div class="text-center flex-1">
+                <h1 class="text-4xl font-bold tracking-wide">
+                    <span class="font-display block" style="font-family: 'Edu QLD Hand', cursive;">
+                        Học từ vựng tiếng Trung
+                    </span>
+                    <span class="text-5xl block" style="font-family: 'Ma Shan Zheng', cursive;">
+                        中文学习
+                    </span>
+                </h1>
+                <h2 class="text-lg mt-2 opacity-90" style="font-family: 'Ma Shan Zheng';">
+                    学习中文词汇
+                </h2>
+            </div>
+
+            <!-- Nút dark mode -->
+            <div class="ml-4">
+                <button id="darkModeToggle" class="bg-white/20 hover:bg-white/30 text-white p-2 rounded-full transition-all duration-300 shadow">
+                    <span id="darkModeIcon" class="text-xl">🌙</span>
                 </button>
             </div>
         </div>
-    </header>
 
-    <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8">
-        <!-- User Login Section -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 mb-6 theme-transition">
-            <div id="loginSection" class="flex items-center justify-between">
-                <div>
-                    <span id="userGreeting" class="text-xs text-gray-600 dark:text-gray-300">Chưa đăng nhập</span>
-                </div>
-                <div>
-                    <button id="loginBtn" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition mr-2">
+        <!-- Khung Đăng nhập -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 mt-6 theme-transition">
+            <div id="loginSection" class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <span id="userGreeting" class="text-sm text-gray-600 dark:text-gray-300">
+                    Chưa đăng nhập
+                </span>
+                <div class="flex flex-wrap gap-2 justify-end">
+                    <button id="loginBtn"
+                        class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">
                         Đăng nhập
                     </button>
-                    <button id="registerBtn" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">
+                    <button id="registerBtn"
+                        class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">
                         Đăng ký
                     </button>
-                    <button id="logoutBtn" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition hidden">
+                    <button id="logoutBtn"
+                        class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition hidden">
                         Đăng xuất
                     </button>
-                    <button id="myWordsBtn" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition ml-2 hidden">
+                    <button id="myWordsBtn"
+                        class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition hidden">
                         Từ của tôi
                     </button>
                 </div>
             </div>
         </div>
+    </div>
+</header>
+
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- User Login Section -->
+        
 
         <!-- Filter Section -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8 theme-transition">
