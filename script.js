@@ -331,9 +331,12 @@ async function markAsLearned() {
  
 
         // Event Listeners
-        flashcard.addEventListener('click', () => {
-            flashcard.classList.toggle('flipped');
-        });
+        function toggleCardFlip() {
+  flashcard.classList.toggle('flipped');
+}
+
+flashcard.addEventListener('click', toggleCardFlip);
+flashcard.addEventListener('touchstart', toggleCardFlip);
 
         nextBtn.addEventListener('click', () => {
             if (currentVocab.length === 0) return;
