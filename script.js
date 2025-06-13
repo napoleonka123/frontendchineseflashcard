@@ -470,8 +470,10 @@ function handleRegisterEnter(e) {
 
         document.getElementById('cancelRegisterBtn').addEventListener('click', () => {
         registerModal.classList.add('hidden');
-        document.getElementById('loginUsername').value = '';
-        document.getElementById('loginPassword').value = '';
+        });
+
+        document.getElementById('cancelRegisterBtn2').addEventListener('click', () => {
+        registerModal.classList.add('hidden');
         });
 
 
