@@ -152,23 +152,22 @@
 
         // Update statistics
         function updateStats() {
-  totalWords.textContent = currentVocab.length;
-
-  const hskLevel = hskFilter.value;
-  const selectedTopic = topicFilter.value;
-
-  const filteredLearned = learnedWords.filter(word => {
-    const matchHSK = !hskLevel || word.level === hskLevel;
-    const matchTopic = !selectedTopic || word.topic === selectedTopic;
-    return matchHSK && matchTopic;
-  });
-
-  learnedCount.textContent = filteredLearned.length;
-}
-function updateStats() {
             totalWords.textContent = currentVocab.length;
-            learnedCount.textContent = learnedWords.length;
+
+            const hskLevel = hskFilter.value;
+            const selectedTopic = topicFilter.value;
+
+            // Lọc từ đã học theo bộ lọc hiện tại
+            const filteredLearned = learnedWords.filter(word => {
+                const matchHSK = !hskLevel || word.level === hskLevel;
+                const matchTopic = !selectedTopic || word.topic === selectedTopic;
+                return matchHSK && matchTopic;
+            });
+
+            learnedCount.textContent = filteredLearned.length;
         }
+
+
 
         // Get random word
         function getRandomWord() {
