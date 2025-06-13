@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title >Học từ vựng tiếng Trung - Flashcard</title>
+    <link rel="icon" type="image/png" href="./asset/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Edu+QLD+Hand:wght@400..700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <style>
+        .flashcard {
+            perspective: 1000px;
+            width: 100%;
+            height: 400px;
+        }
+        
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.000001s;
+            transform-style: preserve-3d;
+        }
+        
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+            transition: transform 0.3s ease-in-out;
+  transform-style: preserve-3d
+        }
+        
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        .flashcard-back {
+            transform: rotateY(180deg);
+            padding: 20px;
+        }
+        
+        .chinese-font {
+            font-family: "Microsoft YaHei", "SimHei", sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #1f93c9 0%, #147e4e 50%);
+        }
+        
+        .card-shadow {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        /* Dark mode styles */
+        .dark {
+            color-scheme: dark;
+        }
+        
+        .theme-transition {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 min-h-screen theme-transition">
+    <!-- Header -->
+    <header class="gradient-bg text-white py-6 shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center">
+                <div class="text-center flex-1">
+                    <h1 class="text-3xl font-bold " style="font-family: 'Ma Shan Zheng';"> <span class="text-3xl font-bold " style="font-family: 'Edu QLD Hand';" >Học từ vựng tiếng Trung</span>中</h1>
+                    <h2 class="text-xl mt-2 chinese-font opacity-90" style="font-family: 'Ma Shan Zheng';" >学习中文词汇</h2>
+                </div>
+                <button id="darkModeToggle" class="bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-lg transition-all duration-300">
+                    <span id="darkModeIcon">🌙</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- User Login Section -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 mb-6 theme-transition">
+            <div id="loginSection" class="flex items-center justify-between">
+                <div>
+                    <span id="userGreeting" class="text-xs text-gray-600 dark:text-gray-300">Đăng nhập để lưu từ</span>
+                </div>
+                <div>
+                    <button id="loginBtn" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition mr-2">
+                        Đăng nhập
+                    </button>
+                    <button id="registerBtn" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">
+                        Đăng ký
+                    </button>
+                    <button id="logoutBtn" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition hidden">
+                        Đăng xuất
+                    </button>
+                    <button id="myWordsBtn" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition ml-2 hidden">
+                        Từ của tôi
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8 theme-transition">
+            <h3 class="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Bộ lọc từ vựng</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Cấp độ HSK</label>
+                    <select id="hskFilter" class="w-full p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 theme-transition">
+                        <option value="">Tất cả cấp độ</option>
+                        <option value="HSK1">HSK1</option>
+                        <option value="HSK2">HSK2</option>
+                        <option value="HSK3">HSK3</option>
+                        <option value="HSK4">HSK4</option>
+                        <option value="HSK5">HSK5</option>
+                        <option value="HSK6">HSK6</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Chủ đề</label>
+                    <select id="topicFilter" class="w-full p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 theme-transition">
+                        <option value="">Tất cả chủ đề</option>
+                        <option value="Đồ ăn">Đồ ăn</option>
+                        <option value="Đời sống">Đời sống</option>
+                        <option value="Gia đình">Gia đình</option>
+                        <option value="Học tập">Học tập</option>
+                        <option value="Thời gian">Thời gian</option>
+                        <option value="Màu sắc">Màu sắc</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Flashcard Section -->
+        <div class="max-w-2xl mx-auto">
+            <div class="flashcard card-shadow" id="flashcard">
+                <div class="flashcard-inner">
+                    <!-- Front Side -->
+                    <div class="flashcard-front bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-600 theme-transition">
+                        <div class="text-center">
+                            <div id="chineseWord" class="text-8xl font-bold chinese-font text-gray-800 dark:text-white mb-4">饭</div>
+                            <p class="text-sm text-gray-400 dark:text-gray-400">Nhấp để xem nghĩa</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Back Side -->
+                    <div class="flashcard-back bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-700 border-2 border-blue-200 dark:border-gray-600 theme-transition">
+                        <div class="space-y-4 text-left w-full">
+                            <div class="text-center">
+                                <div id="pinyin" class="text-2xl font-semibold text-blue-600 dark:text-blue-400 mb-2">fàn</div>
+                                <div id="meaning" class="text-xl text-gray-800 dark:text-white font-medium">cơm</div>
+                            </div>
+                            
+                            <hr class="border-gray-300 dark:border-gray-600">
+                            
+                            <div>
+                                <h4 class="font-semibold text-gray-700 dark:text-gray-300 mb-1">Ví dụ:</h4>
+                                <p id="example" class="chinese-font text-lg text-gray-800 dark:text-white">我喜欢吃饭。</p>
+                                <p id="exampleMeaning" class="text-gray-600 dark:text-gray-400 mt-1">Tôi thích ăn cơm.</p>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-semibold text-gray-700 dark:text-gray-300 mb-1">Từ đồng nghĩa:</h4>
+                                <p id="synonym" class="chinese-font text-gray-800 dark:text-white">餐 (cān - bữa ăn)</p>
+                            </div>
+                            
+                            <div class="flex justify-between items-center">
+                                <span id="level" class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm">HSK1</span>
+                                <span id="topic" class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm">Đồ ăn</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Control Buttons -->
+            <div class="flex justify-center items-center space-x-4 mt-8">
+                <button id="prevBtn" class="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition disabled:opacity-50">
+                    ← Trước
+                </button>
+                
+                <button id="speakBtn" class="bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 transition">
+                    🔊 Nghe
+                </button>
+                
+                <button id="learnedBtn" class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition hidden">
+                    ✓ Đã học
+                </button>
+                
+                <button id="nextBtn" class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition">
+                    Tiếp →
+                </button>
+            </div>
+
+            <!-- Statistics -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 mt-8 theme-transition">
+                <div class="text-center">
+                    <p class="text-gray-600 dark:text-gray-300">
+                        Tổng từ: <span id="totalWords" class="font-semibold">0</span> | 
+                        Đã học: <span id="learnedCount" class="font-semibold">0</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- My Words Modal -->
+    <div id="myWordsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white dark:bg-gray-800 rounded-lg max-w-2xl w-full max-h-96 overflow-y-auto theme-transition">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Từ của tôi</h3>
+                        <button id="closeModalBtn" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-2xl">&times;</button>
+                    </div>
+                    <div id="myWordsList" class="space-y-2">
+                        <!-- My words will be displayed here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full theme-transition">
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Đăng nhập</h3>
+                    <input type="text" id="loginUsername" placeholder="Tên người dùng" class="w-full p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg mb-3 theme-transition">
+                    <input type="password" id="loginPassword" placeholder="Mật khẩu" class="w-full p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg mb-4 theme-transition">
+                    <div class="flex space-x-4">
+                        <button id="confirmLoginBtn" class="flex-1 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">Đăng nhập</button>
+                        <button id="cancelLoginBtn" class="flex-1 bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600">Hủy</button>
+                         <a href="#"id='showRegister' class="underline mt-4 text-sm text-white-600">Đăng ký</a>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div id="registerModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+      <div class="flex items-center justify-center min-h-screen p-4">
+          <div class="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full theme-transition">
+              <div class="p-6">
+                  <h3 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Đăng ký</h3>
+                  <input type="text" id="registerUsername" placeholder="Tên người dùng" class="w-full p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg mb-3 theme-transition">
+                  <input type="password" id="registerPassword" placeholder="Mật khẩu" class="w-full p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg mb-4 theme-transition">
+                <input id="registerConfirmPassword" type="password" placeholder="Xác nhận mật khẩu" class="w-full p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg mb-5 theme-transition" />
+
+                  <div class="flex space-x-4">
+                      <button id="confirmRegisterBtn" class="flex-1 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">Đăng ký</button>
+                      <button id="cancelRegisterBtn" class="flex-1 bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600">Hủy</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+
+    <footer class="gradient-bg text-white py-6 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2025 Học từ vựng tiếng Trung. Designed with ❤️</p>
+            <p class="chinese-font mt-1">中文词汇学习平台</p>
+        </div>
+    </footer>
+
+    <script src="script.js">
+
+    </script>
+</body>
+</html>
