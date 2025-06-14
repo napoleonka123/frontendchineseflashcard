@@ -73,9 +73,9 @@
         function initDarkMode() {
             const savedTheme = getDarkModeSetting();
             if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                disableDarkMode();
-            } else {
                 enableDarkMode();
+            } else {
+                disableDarkMode();
             }
         }
 
