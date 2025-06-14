@@ -137,7 +137,10 @@
             chineseWord.textContent = word.word;
             pinyin.textContent = word.pinyin;
             meaning.textContent = word.meaning;
-            example.textContent = word.example;
+        // Highlight từ đang học trong ví dụ
+        const highlight = `<span class="text-red-400 font-bold">${word.word}</span>`;
+
+        example.innerHTML = word.example.replaceAll(word.word, highlight);
             exampleMeaning.textContent = word.exampleMeaning;
             synonym.textContent = word.synonym;
             level.textContent = word.level;
