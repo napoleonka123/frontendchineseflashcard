@@ -44,7 +44,7 @@
             width: 100%;
             height: 100%;
             text-align: center;
-            transition: transform 0.001s;
+            transition: transform 0.0001s;
             transform-style: preserve-3d;
         }
         
@@ -195,6 +195,17 @@
                 </div>
             </div>
         </div>
+ <!-- Switch Mode Section -->
+<div class="w-full flex justify-center gap-4 mt-10 mb-4">
+  <button id="flashcardModeBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-full shadow-md transition">
+    📖 Flashcard
+  </button>
+  <button id="quizModeBtn" class="bg-yellow-500 hover:bg-yellow-600 text-white px-5 py-2 rounded-full shadow-md transition">
+    🧠 Quiz
+  </button>
+</div>
+
+
 
         <!-- Flashcard Section -->
         <div class="max-w-2xl mx-auto">
@@ -203,7 +214,7 @@
                     <!-- Front Side -->
                     <div class="flashcard-front bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-600 theme-transition">
                         <div class="text-center">
-                            <div id="chineseWord" class="text-8xl font-bold chinese-font text-gray-800 dark:text-white mb-4">饭</div>
+                            <div id="chineseWord" class="text-8xl font-bold chinese-font text-gray-800 dark:text-white mb-4">爱</div>
                             <p class="text-sm text-gray-400 dark:text-gray-400">Nhấp để lật</p>
                         </div>
                     </div>
@@ -212,31 +223,64 @@
                     <div class="flashcard-back bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-700 border-2 border-blue-200 dark:border-gray-600 theme-transition">
                         <div class="space-y-4 text-left w-full">
                             <div class="text-center">
-                                <div id="pinyin" class="text-2xl font-semibold text-blue-600 dark:text-blue-400 mb-2">fàn</div>
-                                <div id="meaning" class="text-xl text-gray-800 dark:text-white font-medium">cơm</div>
+                                <div id="pinyin" class="text-2xl font-semibold text-blue-600 dark:text-blue-400 mb-2">ài</div>
+                                <div id="meaning" class="text-xl text-gray-800 dark:text-white font-medium">yêu</div>
                             </div>
                             
                             <hr class="border-gray-300 dark:border-gray-600">
                             
                             <div>
                                 <h4 class="font-semibold text-gray-700 dark:text-gray-300 mb-1">Ví dụ:</h4>
-<p id="example" class="chinese-font text-lg text-gray-800 dark:text-white"><!-- highlight here --></p>
-                                <p id="exampleMeaning" class="text-gray-600 dark:text-gray-400 mt-1">Tôi thích ăn cơm.</p>
+                                <p id="example" class="chinese-font text-lg text-gray-800 dark:text-white"><!-- highlight here --></p>
+                                <p id="exampleMeaning" class="text-gray-600 dark:text-gray-400 mt-1">Tôi yêu gia đình của mình.</p>
                             </div>
-                            
+
                             <div>
                                 <h4 class="font-semibold text-gray-700 dark:text-gray-300 mb-1">Từ đồng nghĩa:</h4>
-                                <p id="synonym" class="chinese-font text-gray-800 dark:text-white">餐 (cān - bữa ăn)</p>
+                                <p id="synonym" class="chinese-font text-gray-800 dark:text-white">喜欢 (xǐhuān - thích)</p>
                             </div>
-                            
+
                             <div class="flex justify-between items-center">
                                 <span id="level" class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm">HSK1</span>
-                                <span id="topic" class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm">Đồ ăn</span>
+                                <span id="topic" class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm">Tình cảm</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Quiz Mode Section (cải tiến UI) -->
+<section id="quizSection" class="hidden bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6 mt-8 max-w-2xl mx-auto theme-transition border border-gray-200 dark:border-gray-700">
+  <h3 class="text-xl font-semibold mb-6 text-center text-gray-800 dark:text-white tracking-wide">🧠 Chọn nghĩa đúng cho từ:</h3>
+
+  <div class="text-center mb-4">
+  <label for="quizHskFilter" class="text-gray-700 dark:text-gray-300 font-medium mr-2">Lọc HSK:</label>
+  <select id="quizHskFilter" class="px-3 py-1 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white theme-transition">
+    <option value="">Tất cả</option>
+    <option value="1">HSK 1</option>
+    <option value="2">HSK 2</option>
+    <option value="3">HSK 3</option>
+    <option value="4">HSK 4</option>
+    <option value="5">HSK 5</option>
+    <option value="6">HSK 6</option>
+  </select>
+</div>
+
+
+  <div id="quizWord" class="text-5xl text-center chinese-font font-extrabold text-blue-600 dark:text-yellow-400 mb-8">爱</div>
+
+  <div id="quizOptions" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4"></div>
+
+  <div id="quizFeedback" class="text-center text-lg font-medium min-h-[2rem]"></div>
+
+  <div class="text-center mt-6">
+    <button id="nextQuizBtn" class="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-2 rounded-full shadow-lg transition hidden">
+      ✅ Tiếp tục →
+    </button>
+  </div>
+</section>
+
+
 
             <!-- Control Buttons -->
             <div class="flex justify-center items-center space-x-4 mt-8">

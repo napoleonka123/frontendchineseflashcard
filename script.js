@@ -23,6 +23,8 @@
         let currentUser = null;
         let learnedWords = [];
         let allVocab = [];        // chứa toàn bộ từ từ server
+        let quizHistory = []; // Danh sách các từ đã hỏi trong quiz
+
 
 
         // DOM Elements
@@ -300,7 +302,7 @@ async function markAsLearned() {
       learnedBtn.textContent = '✓ Đã học';
       learnedBtn.classList.remove('bg-gray-500');
       learnedBtn.classList.add('bg-green-500');
-    }, 1000);
+    }, 2000);
   } catch (err) {
     alert('❌ ' + err.message);
   }
@@ -607,7 +609,94 @@ document.getElementById('confirmRegisterBtn').addEventListener('click', async ()
 });
 
 
+// Show quiz from learned words
+function showQuizFromLearned() {
+  if (learnedWords.length === 0 || allVocab.length === 0) {
+    alert('❌ Chưa có đủ dữ liệu để làm quiz!');
+    return;
+  }
 
+  // 1. Lọc HSK nếu có chọn
+  const selectedHsk = document.getElementById('quizHskFilter').value;
+  let filteredLearned = learnedWords;
+
+  if (selectedHsk) {
+    filteredLearned = learnedWords.filter(w => w.level === selectedHsk);
+  }
+
+  // 2. Chống lặp từ
+  const unaskedWords = filteredLearned.filter(word =>
+    !quizHistory.some(prev => prev._id === word._id)
+  );
+
+  if (unaskedWords.length === 0) {
+    quizHistory = []; // reset lịch sử
+    alert('🎉 Bạn đã luyện hết các từ trong HSK này!');
+    return;
+  }
+
+  const word = unaskedWords[Math.floor(Math.random() * unaskedWords.length)];
+  quizHistory.push(word);
+
+  // Hiển thị Quiz như cũ
+  const correctMeaning = word.meaning;
+  document.getElementById('quizWord').textContent = word.word;
+  const quizOptions = document.getElementById('quizOptions');
+  const quizFeedback = document.getElementById('quizFeedback');
+  const nextQuizBtn = document.getElementById('nextQuizBtn');
+
+  quizOptions.innerHTML = '';
+  quizFeedback.textContent = '';
+  nextQuizBtn.classList.add('hidden');
+
+  const wrongChoices = allVocab
+    .filter(w => w.meaning !== correctMeaning)
+    .sort(() => 0.5 - Math.random())
+    .slice(0, 3)
+    .map(w => w.meaning);
+
+  const allChoices = [...wrongChoices, correctMeaning].sort(() => 0.5 - Math.random());
+
+  allChoices.forEach(choice => {
+    const btn = document.createElement('button');
+    btn.textContent = choice;
+    btn.className = 'bg-gray-100 hover:bg-blue-100 dark:bg-gray-800 dark:hover:bg-blue-700 text-gray-800 dark:text-white px-4 py-2 rounded-lg transition font-medium';
+    btn.addEventListener('click', () => {
+      if (choice === correctMeaning) {
+        quizFeedback.innerHTML = `<span class="text-green-600">✔️ Chính xác!</span>`;
+        nextQuizBtn.classList.remove('hidden');
+      } else {
+        quizFeedback.innerHTML = `<span class="text-red-600">❌ Sai. Đáp án đúng là: <strong>${correctMeaning}</strong></span>`;
+      }
+    });
+    quizOptions.appendChild(btn);
+  });
+}
+
+
+
+
+
+document.getElementById('nextQuizBtn').addEventListener('click', () => {
+  showQuizFromLearned();
+});
+
+const quizSection = document.getElementById('quizSection');
+const flashcardSection = document.getElementById('flashcard'); // là thẻ div chứa flashcard
+const controlButtons = document.querySelector('.flex.justify-center.items-center.space-x-4.mt-8'); // phần Prev / Next
+
+document.getElementById('flashcardModeBtn').addEventListener('click', () => {
+  quizSection.classList.add('hidden');
+  flashcardSection.classList.remove('hidden');
+  controlButtons?.classList.remove('hidden');
+});
+
+document.getElementById('quizModeBtn').addEventListener('click', () => {
+  quizSection.classList.remove('hidden');
+  flashcardSection.classList.add('hidden');
+  controlButtons?.classList.add('hidden');
+  showQuizFromLearned();
+});
 
 
         // Initialize the application
