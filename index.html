@@ -289,7 +289,25 @@
 
 
             <!-- Control Buttons -->
-            <div class="flex justify-center items-center space-x-4 mt-8">
+           
+
+<div class="flex justify-center items-center mt-2 space-x-4">
+  <button
+    id="learnedBtn"
+    class="bg-[#1E3A8A] text-white px-6 py-3 rounded-lg hover:bg-[#1E40AF] active:scale-95 active:shadow-inner transition hidden"
+  >
+    Đang học
+  </button>
+  <button
+    id="masteredBtn"
+    class="bg-[#6B21A8] text-white px-6 py-3 rounded-lg hover:bg-[#7E22CE] active:scale-95 active:shadow-inner transition hidden"
+  >
+    Đã thuộc
+  </button>
+</div>
+
+            
+ <div class="flex justify-center items-center space-x-4 mt-2">
                 <button id="prevBtn" class="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition disabled:opacity-50">
                     ← Trước
                 </button>
@@ -304,14 +322,7 @@
                     Tiếp →
                 </button>
             </div>
-            <div class="flex justify-center items-center mt-2">
-                <button id="learnedBtn" class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition hidden">
-                    Đang học
-                </button>
-                <button id="masteredBtn" class="bg-yellow-500 text-white px-6 py-3 rounded-lg hover:bg-yellow-600 transition hidden">
-                    Đã thuộc
-                </button>
-            </div>
+
 
 
             
@@ -320,8 +331,8 @@
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 mt-8 theme-transition">
                 <div class="text-center">
                     <p class="text-gray-600 dark:text-gray-300">
-                        Tổng từ: <span id="totalWords" class="font-semibold">0</span> | 
-                        Đã học: <span id="learnedCount" class="font-semibold">0</span>
+                        Còn lại: <span id="totalWords" class="font-semibold">0</span> | 
+                        Đã thuộc: <span id="learnedCount" class="font-semibold">0</span>
                     </p>
                 </div>
             </div>

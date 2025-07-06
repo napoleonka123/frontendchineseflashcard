@@ -70,7 +70,6 @@
         initDarkMode();
 }
 
-masteredBtn.addEventListener('click', markAsMastered);
 
 
 
@@ -115,25 +114,31 @@ masteredBtn.addEventListener('click', markAsMastered);
         }
 
         // Filter vocabulary based on selected criteria
-        function filterVocabulary() {
+function filterVocabulary() {
   const hskLevel = hskFilter.value;
   const selectedTopic = topicFilter.value;
 
   currentVocab = allVocab.filter(word => {
-  const matchHSK = !hskLevel || word.level === hskLevel;
-  const matchTopic = !selectedTopic || word.topic === selectedTopic;
-  const notMastered = !masteredWords.some(w => w._id === word._id);
-  return matchHSK && matchTopic && notMastered;
-});
-
+    const matchHSK = !hskLevel || word.level === hskLevel;
+    const matchTopic = !selectedTopic || word.topic === selectedTopic;
+    const notMastered = !masteredWords.some(w => w._id === word._id);
+    return matchHSK && matchTopic && notMastered;
+  });
 
   if (currentVocab.length === 0) {
-    currentVocab = allVocab;
+    currentVocab = allVocab.filter(
+      word => !masteredWords.some(w => w._id === word._id)
+    );
+  }
+
+  if (currentVocab.length === 0) {
+    alert('🎉 Bạn đã mastered hết các từ!');
   }
 
   currentIndex = 0;
   history = [];
 }
+
 
 
         // Update display with current word
@@ -174,7 +179,7 @@ masteredBtn.addEventListener('click', markAsMastered);
                 return matchHSK && matchTopic;
             });
 
-            learnedCount.textContent = filteredLearned.length;
+            learnedCount.textContent = masteredWords.length;
         }
 
 
@@ -288,10 +293,14 @@ async function loadMasteredWords() {
     if (!res.ok) throw new Error('Không tải được từ mastered');
     masteredWords = await res.json();
     updateStats();
+
+    filterVocabulary();         // ✅ THÊM DÒNG NÀY
+    updateDisplay();            // ✅ THÊM DÒNG NÀY
   } catch (err) {
     console.error('❌', err);
   }
 }
+
 
 async function markAsMastered() {
   if (!currentUser || currentVocab.length === 0) return;
@@ -316,7 +325,7 @@ async function markAsMastered() {
 
     // Cập nhật UI
     updateStats();
-    nextBtn.click(); // chuyển sang từ khác
+      nextBtn.click(); // chuyển sang từ khác
   } catch (err) {
     alert('❌ ' + err.message);
   }
@@ -353,13 +362,11 @@ async function markAsLearned() {
 
     // Hiệu ứng nút đã học
     learnedBtn.textContent = '✓ Đã thêm!';
-    learnedBtn.classList.add('bg-gray-500');
     learnedBtn.classList.remove('bg-green-500');
     setTimeout(() => {
-      learnedBtn.textContent = '✓ Đã học';
-      learnedBtn.classList.remove('bg-gray-500');
+      learnedBtn.textContent = 'Đang học';
       learnedBtn.classList.add('bg-green-500');
-    }, 2000);
+    }, 500);
   } catch (err) {
     alert('❌ ' + err.message);
   }
@@ -762,6 +769,7 @@ document.getElementById('quizModeBtn').addEventListener('click', () => {
   showQuizFromLearned();
 });
 
+masteredBtn.addEventListener('click', markAsMastered);
 
         // Initialize the application
         init();
