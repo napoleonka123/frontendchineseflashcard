@@ -623,6 +623,8 @@ function handleRegisterEnter(e) {
     currentUser = data.username;
     updateUserInterface();
     loadLearnedWords();
+    loadMasteredWords();      
+
 
     return true;
   } catch (err) {
