@@ -24,7 +24,7 @@
         let learnedWords = [];
         let allVocab = [];        // chứa toàn bộ từ từ server
         let quizHistory = []; // Danh sách các từ đã hỏi trong quiz
-
+        let masteredWords = []; // Danh sách các từ đã thuộc (mastered)
 
 
         // DOM Elements
@@ -43,6 +43,8 @@
         const nextBtn = document.getElementById('nextBtn');
         const speakBtn = document.getElementById('speakBtn');
         const learnedBtn = document.getElementById('learnedBtn');
+        const masteredBtn = document.getElementById('masteredBtn');
+
         const totalWords = document.getElementById('totalWords');
         const learnedCount = document.getElementById('learnedCount');
         const darkModeToggle = document.getElementById('darkModeToggle');
@@ -68,6 +70,7 @@
         initDarkMode();
 }
 
+masteredBtn.addEventListener('click', markAsMastered);
 
 
 
@@ -117,10 +120,12 @@
   const selectedTopic = topicFilter.value;
 
   currentVocab = allVocab.filter(word => {
-    const matchHSK = !hskLevel || word.level === hskLevel;
-    const matchTopic = !selectedTopic || word.topic === selectedTopic;
-    return matchHSK && matchTopic;
-  });
+  const matchHSK = !hskLevel || word.level === hskLevel;
+  const matchTopic = !selectedTopic || word.topic === selectedTopic;
+  const notMastered = !masteredWords.some(w => w._id === word._id);
+  return matchHSK && matchTopic && notMastered;
+});
+
 
   if (currentVocab.length === 0) {
     currentVocab = allVocab;
@@ -226,6 +231,8 @@
                 logoutBtn.classList.remove('hidden');
                 myWordsBtn.classList.remove('hidden');
                 learnedBtn.classList.remove('hidden');
+                    masteredBtn.classList.remove('hidden'); // ✅ THÊM DÒNG NÀY
+
             } else {
                 userGreeting.textContent = 'Chưa đăng nhập';
                 loginBtn.classList.remove('hidden');
@@ -233,6 +240,7 @@
                 logoutBtn.classList.add('hidden');
                 myWordsBtn.classList.add('hidden');
                 learnedBtn.classList.add('hidden');
+                masteredBtn.classList.add('hidden'); // ✅ THÊM DÒNG NÀY
             }
         }
 
@@ -245,6 +253,7 @@
     currentUser = savedUsername;
     updateUserInterface();
     loadLearnedWords();
+    loadMasteredWords();
   }
 }
 
@@ -267,6 +276,54 @@ async function loadLearnedWords() {
     console.error('❌', err);
   }
 }
+async function loadMasteredWords() {
+  masteredWords = [];
+
+  try {
+    const token = localStorage.getItem('token');
+    const res = await fetch('https://chineseflashcard.onrender.com/api/vocab/mastered', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    if (!res.ok) throw new Error('Không tải được từ mastered');
+    masteredWords = await res.json();
+    updateStats();
+  } catch (err) {
+    console.error('❌', err);
+  }
+}
+
+async function markAsMastered() {
+  if (!currentUser || currentVocab.length === 0) return;
+
+  const currentWord = currentVocab[currentIndex];
+  const alreadyMastered = masteredWords.some(w => w._id === currentWord._id);
+  if (alreadyMastered) return;
+
+  try {
+    const token = localStorage.getItem('token');
+    const res = await fetch('https://chineseflashcard.onrender.com/api/vocab/mastered', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ wordId: currentWord._id })
+    });
+
+    if (!res.ok) throw new Error('Lỗi khi lưu từ mastered');
+    masteredWords.push(currentWord);
+
+    // Cập nhật UI
+    updateStats();
+    nextBtn.click(); // chuyển sang từ khác
+  } catch (err) {
+    alert('❌ ' + err.message);
+  }
+}
+
+
+
 
 
 async function markAsLearned() {
@@ -467,19 +524,24 @@ function handleRegisterEnter(e) {
         const showRegisterLink = document.getElementById('showRegister');
         
         showRegisterLink.addEventListener('click', (e) => {
+        loginModal.classList.add('hidden');
           e.preventDefault(); // Ngăn chuyển trang
           registerModal.classList.remove('hidden');
         });
         
+        const showLoginLink = document.getElementById('showLogin');
+        showLoginLink.addEventListener('click', (e) => {
+            registerModal.classList.add('hidden');
+            e.preventDefault(); // Ngăn chuyển trang
+            loginModal.classList.remove('hidden');
+        });
 
 
         document.getElementById('cancelRegisterBtn').addEventListener('click', () => {
         registerModal.classList.add('hidden');
         });
 
-        document.getElementById('cancelRegisterBtn2').addEventListener('click', () => {
-        registerModal.classList.add('hidden');
-        });
+        
 
 
         document.getElementById('closeModalBtn').addEventListener('click', () => {
@@ -618,7 +680,9 @@ function showQuizFromLearned() {
 
   // 1. Lọc HSK nếu có chọn
   const selectedHsk = document.getElementById('quizHskFilter').value;
-  let filteredLearned = learnedWords;
+let filteredLearned = learnedWords.filter(
+  w => !masteredWords.some(m => m._id === w._id)
+);
 
   if (selectedHsk) {
     filteredLearned = learnedWords.filter(w => w.level === selectedHsk);

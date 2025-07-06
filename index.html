@@ -7,7 +7,7 @@
     <link rel="icon" type="image/png" href="./asset/favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Edu+QLD+Hand:wght@400..700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Edu+QLD+Hand:wght@400..700&family=Varela+Round&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -76,7 +76,7 @@
         }
         
         .gradient-bg {
-            background: linear-gradient(135deg, #1f93c9 0%, #147e4e 50%);
+            background: linear-gradient(135deg, #033448da 20%, #124979 100%);
         }
         
         .card-shadow {
@@ -95,14 +95,20 @@
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 min-h-screen theme-transition">
    <!-- Header -->
-<header class="gradient-bg text-white py-6 shadow-lg">
-    <div class="container mx-auto px-4">
+<header class=" text-white py-6 shadow-lg "  
+    style="
+    background-image: url('./asset/bg.png');
+     background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+  
+  ">
+    <div class="container mx-auto px-4 ">
         <div class="flex justify-between items-center">
             <!-- Tiêu đề -->
             <div class="text-center flex-1">
                 <h1 class="text-4xl font-bold tracking-wide">
-                    <span class="font-display block" style="font-family: 'Edu QLD Hand', cursive;">
-                        Học từ vựng tiếng Trung
+<span class="font-display block text-5xl" style="font-family: 'Amatic SC', sans-serif">                        Học từ vựng tiếng Trung
                     </span>
                     <span class="text-5xl block" style="font-family: 'Ma Shan Zheng', cursive;">
                         学习中文
@@ -111,14 +117,14 @@
                 <!-- <h2 class="text-lg mt-2 opacity-90" style="font-family: 'Ma Shan Zheng';">
                     学习中文词汇
                 </h2> -->
-            </div>
-
-            <!-- Nút dark mode -->
             <div class="ml-4">
                 <button id="darkModeToggle" class="bg-white/20 hover:bg-white/30 text-white p-2 rounded-full transition-all duration-300 shadow">
                     <span id="darkModeIcon" class="text-xl">🌙</span>
                 </button>
-            </div>
+            </div></div>
+
+            <!-- Nút dark mode -->
+            
         </div>
 
        <!-- Khung đăng nhập gọn, linh hoạt -->
@@ -292,14 +298,23 @@
                     🔊 Nghe
                 </button>
                 
-                <button id="learnedBtn" class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition hidden">
-                    ✓ Đã học
-                </button>
+                
                 
                 <button id="nextBtn" class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition">
                     Tiếp →
                 </button>
             </div>
+            <div class="flex justify-center items-center mt-2">
+                <button id="learnedBtn" class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition hidden">
+                    Đang học
+                </button>
+                <button id="masteredBtn" class="bg-yellow-500 text-white px-6 py-3 rounded-lg hover:bg-yellow-600 transition hidden">
+                    Đã thuộc
+                </button>
+            </div>
+
+
+            
 
             <!-- Statistics -->
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 mt-8 theme-transition">
@@ -328,63 +343,68 @@
                 </div>
             </div>
         </div>
-    </div>
-<!-- Login Modal -->
-<div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
-  <div class="bg-white dark:bg-gray-800 rounded-xl w-full max-w-md shadow-lg theme-transition relative">
-    <button id="cancelLoginBtn" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-2xl font-bold">&times;</button>
+    </div><!-- Modal Glassmorphism -->
+<div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 hidden">
+  <div class="flex items-center justify-center min-h-screen px-4">
+    <div class="bg-white/10 dark:bg-white/5 backdrop-blur-2xl border border-white/20 dark:border-white/10 shadow-2xl rounded-3xl w-full max-w-sm p-6 theme-transition text-white">
+      
+      <h2 class="text-2xl font-bold text-center mb-6 drop-shadow " >Đăng nhập</h2>
+      
+      <input id="loginUsername" type="text" placeholder="👤 Tên đăng nhập"
+        class="w-full px-4 py-3 mb-4 rounded-xl bg-white/20 text-white placeholder-white/70 border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-400 backdrop-blur-md" />
 
-    <div class="p-6">
-      <h3 class="text-2xl font-bold mb-5 text-gray-800 dark:text-white text-center">🔐 Đăng nhập</h3>
+      <input id="loginPassword" type="password" placeholder="🔑 Mật khẩu"
+        class="w-full px-4 py-3 mb-5 rounded-xl bg-white/20 text-white placeholder-white/70 border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-400 backdrop-blur-md" />
 
-      <input type="text" id="loginUsername" placeholder="Tên người dùng"
-        class="w-full p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg mb-4 theme-transition">
-
-      <input type="password" id="loginPassword" placeholder="Mật khẩu"
-        class="w-full p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg mb-5 theme-transition">
-
-      <div class="flex flex-col sm:flex-row gap-3">
+      <div class="flex gap-2">
         <button id="confirmLoginBtn"
-          class="flex-1 bg-cyan-500 hover:bg-cyan-600 text-white py-2 rounded-full shadow transition">
+          class="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-xl shadow-lg font-family:'Edu QLD Hand', sans-serif transition">
           Đăng nhập
         </button>
-
-        <button id="showRegister"
-          class="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white py-2 rounded-full shadow transition">
-          Đăng ký
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Register Modal --><!-- Register Modal -->
-<div id="registerModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
-  <div class="bg-white dark:bg-gray-800 rounded-xl w-full max-w-md shadow-lg theme-transition relative">
-    <button id="cancelRegisterBtn2" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-2xl font-bold">&times;</button>
-
-    <div class="p-6">
-      <h3 class="text-2xl font-bold mb-5 text-gray-800 dark:text-white text-center">📝 Đăng ký</h3>
-
-      <input type="text" id="registerUsername" placeholder="Tên người dùng"
-        class="w-full p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg mb-3 theme-transition">
-
-      <input type="password" id="registerPassword" placeholder="Mật khẩu"
-        class="w-full p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg mb-3 theme-transition">
-
-      <input id="registerConfirmPassword" type="password" placeholder="Xác nhận mật khẩu"
-        class="w-full p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg mb-5 theme-transition">
-
-      <div class="flex flex-col sm:flex-row gap-3">
-        <button id="confirmRegisterBtn"
-          class="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white py-2 rounded-full shadow transition">
-          Đăng ký
-        </button>
-
-        <button id="cancelRegisterBtn"
-          class="flex-1 bg-gray-400 hover:bg-gray-500 text-white py-2 rounded-full shadow transition">
+        <button id="cancelLoginBtn"
+          class="flex-1 bg-white/30 hover:bg-white/40 text-white py-2 rounded-xl font-semibold transition">
           Hủy
         </button>
       </div>
+
+      <p class="text-sm text-center mt-4 text-white/80">
+        Chưa có tài khoản? <a href="#" id="showRegister" class="text-blue-300 hover:underline font-medium">Đăng ký</a>
+      </p>
+
+    </div>
+  </div>
+</div>
+<!-- Register Modal - Glassmorphism Style -->
+<div id="registerModal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 hidden">
+  <div class="flex items-center justify-center min-h-screen px-4">
+    <div class="bg-white/10 dark:bg-white/5 backdrop-blur-2xl border border-white/20 dark:border-white/10 shadow-2xl rounded-3xl w-full max-w-sm p-6 theme-transition text-white">
+      
+      <h2 class="text-2xl font-bold text-center mb-6 drop-shadow">📝 Đăng ký</h2>
+
+      <input id="registerUsername" type="text" placeholder=" Tên đăng nhập"
+        class="w-full px-4 py-3 mb-4 rounded-xl bg-white/20 text-white placeholder-white/70 border border-white/20 focus:outline-none focus:ring-2 focus:ring-green-400 backdrop-blur-md" />
+
+      <input id="registerPassword" type="password" placeholder=" Mật khẩu"
+        class="w-full px-4 py-3 mb-4 rounded-xl bg-white/20 text-white placeholder-white/70 border border-white/20 focus:outline-none focus:ring-2 focus:ring-green-400 backdrop-blur-md" />
+
+      <input id="registerConfirmPassword" type="password" placeholder=" Xác nhận mật khẩu"
+        class="w-full px-4 py-3 mb-5 rounded-xl bg-white/20 text-white placeholder-white/70 border border-white/20 focus:outline-none focus:ring-2 focus:ring-green-400 backdrop-blur-md" />
+
+      <div class="flex gap-2">
+        <button id="confirmRegisterBtn"
+          class="flex-1 bg-green-500 hover:bg-green-600 text-white py-2 rounded-xl shadow-lg font-semibold transition">
+          Đăng ký
+        </button>
+        <button id="cancelRegisterBtn"
+          class="flex-1 bg-white/30 hover:bg-white/40 text-white py-2 rounded-xl font-semibold transition">
+          Hủy
+        </button>
+      </div>
+
+      <p class="text-sm text-center mt-4 text-white/80">
+        Đã có tài khoản? <a href="#" id="showLogin" class="text-green-300 hover:underline font-medium">Đăng nhập</a>
+      </p>
+
     </div>
   </div>
 </div>
